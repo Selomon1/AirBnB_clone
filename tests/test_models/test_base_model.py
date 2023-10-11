@@ -6,6 +6,7 @@ Tests the Base Model module
 import unittest
 from datetime import datetime
 from models.base_model import BaseModel
+import models
 import uuid
 
 
@@ -52,34 +53,40 @@ class TestBaseModel(unittest.TestCase):
 
     def test_created_at(self):
         """ Tests created at """
-        self.assertTrue(hasattr(test_mod, "created_at"))
-        self.assertIsNotNone(test_mod.created_at)
-        self.assertIsInstance(test_mod.created_at, datetime)
+        test_mod1 = BaseModel()
+
+        self.assertTrue(hasattr(test_mod1, "created_at"))
+        self.assertIsNotNone(test_mod1.created_at)
+        self.assertIsInstance(test_mod1.created_at, datetime)
 
     def test_updated_at(self):
         """ Testing updated at """
-        self.assertTrue(hasattr(test_mod, "updated_at")
-        self.assertIsNotNone(test_mod.updated_at)
-        self.assertIsInstance(test_mod.updated_at, datetime)
+        test_mod2 = BaseModel()
+
+        self.assertTrue(hasattr(test_mod2, "updated_at"))
+        self.assertIsNotNone(test_mod2.updated_at)
+        self.assertIsInstance(test_mod2.updated_at, datetime)
 
     def test_str_output(self):
         """ Testing if it prints the correct output """
-        str_out = "[BaseModel] ({}) {}".format(test_mod.id, test_mod.__dict__)
-        self.assertEqual(str(test_mod), str_out)
+        test_mod3 = BaseModel()
 
-        old_update = test_mod.updated_at
-        test_mod.save()
-        self.assertGreater(test_mod.updated_at, old_update)
+        str_out = "[BaseModel] ({}) {}".format(test_mod3.id, test_mod3.__dict__)
+        self.assertEqual(str(test_mod3), str_out)
+
+        old_update = test_mod3.updated_at
+        test_mod3.save()
+        self.assertGreater(test_mod3.updated_at, old_update)
 
     def test_kwargs_input(self):
         """ Testing kwargs initialzation of the class """
         dic = {
-            "id": "test_id"
+            "id": "test_id",
             "created_at": "2023-10-11T05:27:50.784510",
             "updated_at": "2023-10-11T05:28:37.684534",
             "name": "Sol_Ermi",
             "value": 23,
-            }
+        }
         test_mod = BaseModel(**dic)
 
         self.assertEqual(test_mod.id, "test_id")
