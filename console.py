@@ -5,6 +5,7 @@ from models import storage
 from models.base_model import BaseModel
 import cmd
 import sys
+import shlex
 
 
 class HBNBCommand(cmd.Cmd):
@@ -31,19 +32,19 @@ class HBNBCommand(cmd.Cmd):
 
     def do_create(self, line):
         """ create an instance of BaseModel """
-        cmd_args = line.split()
+        cmd_args = shlex.split(line)
         if len(cmd_args) == 0:
             print("** class name missing **")
         elif cmd_args[0] not in HBNBCommand.mods:
             print("** class doesn't exist **")
         else:
-            new_insta = eval(cmd_args[0])(*cmd_args[1:])
+            new_insta = eval(str(cmd_args[0]) + '()')
             new_insta.save()
             print(new_insta.id)
 
     def do_show(self, line):
         """ print the string representation of an instance """
-        cmd_args = line.split()
+        cmd_args = shlex.split(line)
         if len(cmd_args) == 0:
             print("** class name missing **")
         elif cmd_args[0] not in HBNBCommand.mods:
@@ -52,14 +53,14 @@ class HBNBCommand(cmd.Cmd):
             print("** instance id missing **")
         else:
             stor = storage.all()
-            inst1 = cmd_args[0] + "." + str(cmd_args[1])
+            inst1 = str(cmd_args[0]) + "." + str(cmd_args[1])
             if inst1 in stor:
                 print(stor[inst1])
             else:
                 print("** no instance found **")
     def do_destroy(self, line):
         """ deletes an instance based on the class name """
-        cmd_args = line.split()
+        cmd_args = shlex.split(line)
         stor = storage.all()
         if len(cmd_args) == 0:
             print("** class name missing **")
@@ -77,7 +78,7 @@ class HBNBCommand(cmd.Cmd):
         """ prints a string representation of all instances based or not
         on the class name
         """
-        cmd_args = line.split()
+        cmd_args = shlex.split(line)
         stor = storage.all()
         obj_op = []
         l = len(cmd_args)
@@ -93,7 +94,7 @@ class HBNBCommand(cmd.Cmd):
 
     def do_update(self, line):
         """ updates an instance based on the class name and id """
-        cmd_args = line.split()
+        cmd_args = shlex.split(line)
         stor = storage.all()
         if len(cmd_args) == 0:
             print("** class name missing **")
