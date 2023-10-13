@@ -1,7 +1,15 @@
 #!/usr/bin/python3
-
+"""
+HBNB Command console module
+"""
 
 from models import storage
+from models.user import User
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.place import Place
+from models.review import Review
 from models.base_model import BaseModel
 import cmd
 import sys
@@ -10,7 +18,7 @@ import shlex
 
 class HBNBCommand(cmd.Cmd):
     prompt = "(hbnb) "
-    mods = ["BaseModel"]
+    mods = ["BaseModel", "User", "State", "City", "Amenity", "Place", "Review"]
 
     def do_EOF(self, line):
         return True
