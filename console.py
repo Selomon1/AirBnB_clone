@@ -17,25 +17,49 @@ import shlex
 
 
 class HBNBCommand(cmd.Cmd):
+    """
+    HBNBCommand class interpreter
+    Attributes:
+            prompt (str): prompt command
+            mods (list): list of class names
+    """
     prompt = "(hbnb) "
     mods = ["BaseModel", "User", "State", "City", "Amenity", "Place", "Review"]
 
     def do_EOF(self, line):
+        """
+        Signal to Exit the interpreter program
+        """
         return True
 
     def help_EOF(self):
+        """
+        Display help information of interpreter program
+        """
         print("ctrl + d to exit the program")
 
     def emptyline(self):
+        """
+        Doing nothing when empty line is entered
+        """
         pass
 
     def postloop(self):
+        """
+        Exits to be overridden by subclasses
+        """
         print()
 
     def do_quit(self, line):
+        """
+        Exit the command interpreter program
+        """
         sys.exit()
 
     def help_quit(self):
+        """
+        Display quit command help information
+        """
         print("Quit command to exit the program\n")
 
     def do_create(self, line):

@@ -14,16 +14,31 @@ from models.review import Review
 
 
 class FileStorage:
+    """
+    FileStorage class: a storage engine for AirBnB clone
+    Methods class:
+            all: return the object
+            new: set new object and update
+            save: convert objects to Json strings
+            reload: deserilize
+    Attributes:
+            __file_path: the file that saves the object
+            __objects: dictionary of the objects
+            dict_data: dictionary of classes
+    """
     __file_path = "file.json"
     __objects = {}
-        
+
     def all(self):
+        """ return the object in dictionary """
         return FileStorage.__objects
 
     def new(self, obj):
+        """ Set new object in the dictionary of objects """
         FileStorage.__objects["{}.{}".format(type(obj).__name__, obj.id)] = obj
 
     def save(self):
+        """ Convert objects to Json strings and save """
         dict_data = {}
 
         for key, value in FileStorage.__objects.items():
@@ -33,6 +48,7 @@ class FileStorage:
             json.dump(dict_data, j)
 
     def reload(self):
+        """ Deserialize Json strings to objects """
         try:
             with open(FileStorage.__file_path, 'r') as j:
                 deserilized_obj = json.load(j)
