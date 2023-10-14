@@ -90,6 +90,7 @@ class HBNBCommand(cmd.Cmd):
                 print(stor[inst1])
             else:
                 print("** no instance found **")
+
     def do_destroy(self, line):
         """ deletes an instance based on the class name """
         cmd_args = shlex.split(line)
@@ -113,14 +114,14 @@ class HBNBCommand(cmd.Cmd):
         cmd_args = shlex.split(line)
         stor = storage.all()
         obj_op = []
-        l = len(cmd_args)
-        if l > 0 and cmd_args[0] not in HBNBCommand.mods:
+        le = len(cmd_args)
+        if le > 0 and cmd_args[0] not in HBNBCommand.mods:
             print("** class doesn't exist **")
         else:
             for obj in storage.all().values():
-                if l > 0 and cmd_args[0] == obj.__class__.__name__:
+                if le > 0 and cmd_args[0] == obj.__class__.__name__:
                     obj_op.append(obj.__str__())
-                elif l == 0:
+                elif le == 0:
                     obj_op.append(obj.__str__())
             print(obj_op)
 
@@ -151,6 +152,7 @@ class HBNBCommand(cmd.Cmd):
             pass
         setattr(inst_obj, cmd_args[2], cmd_args[3])
         storage.save()
+
 
 if __name__ == "__main__":
     HBNBCommand().cmdloop()
