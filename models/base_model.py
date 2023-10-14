@@ -11,7 +11,7 @@ import models
 
 class BaseModel:
     """
-    A class that defines all classes
+    A class that defines all implemented classes
     """
     def __init__(self, *args, **kwargs):
         """
