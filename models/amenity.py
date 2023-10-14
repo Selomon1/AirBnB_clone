@@ -9,6 +9,6 @@ class Amenity(BaseModel):
     """
     Amenity class inherited from BaseModel class
     Attribute:
-            name (str): amenity name of the user
+            name (str): amenity or address name of the place
     """
     name = ""
