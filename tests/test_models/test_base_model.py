@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """
-Tests the Base Model module
+Testing the Base Model module
 """
 
 import unittest
