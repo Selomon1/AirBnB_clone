@@ -9,8 +9,8 @@ class Place(BaseModel):
     """
     Place class inherited from BaseModel class
     Attributes:
-            city_id (str): users city id
-            user_id (str): user id
+            city_id (str): city id of the place or hotel
+            user_id (str): id of the user
             name (str): the name of the place
             description (str): description of the place
             number_rooms (int): number of rooms

@@ -10,7 +10,7 @@ class City(BaseModel):
     City class inherited from BaseModel class
     Attributes:
             state_id (str): users state id of the city
-            name (str): users city name
+            name (str): city name
     """
     state_id = ""
     name = ""
