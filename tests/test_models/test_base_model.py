@@ -3,6 +3,7 @@
 Tests the Base Model module
 """
 
+
 import unittest
 from datetime import datetime
 from models.base_model import BaseModel
@@ -14,6 +15,7 @@ class TestBaseModel(unittest.TestCase):
     """ Test the BaseModel  class """
 
     def setUp(self):
+        """ tests all set up of the files """
         pass
 
     def test_mod_doc(self):
