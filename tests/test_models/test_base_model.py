@@ -34,7 +34,7 @@ class TestBaseModel(unittest.TestCase):
                 ]
         for met in methods:
             self.assertIsNotNone(met.__doc__)
-    
+
     def test_init_attr(self):
         """ Test id of the object """
         test_mod = BaseModel()
@@ -71,7 +71,8 @@ class TestBaseModel(unittest.TestCase):
         """ Testing if it prints the correct output """
         test_mod3 = BaseModel()
 
-        str_out = "[BaseModel] ({}) {}".format(test_mod3.id, test_mod3.__dict__)
+        str_out = "[BaseModel] ({}) {}".format(test_mod3.id,
+                                               test_mod3.__dict__)
         self.assertEqual(str(test_mod3), str_out)
 
         old_update = test_mod3.updated_at
@@ -116,6 +117,7 @@ class TestBaseModel(unittest.TestCase):
         test_mod = BaseModel()
         with self.assertRaises(TypeError):
             test_mod.save(None)
+
 
 if __name__ == "__main__":
     unittest.main()
