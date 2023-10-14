@@ -20,10 +20,10 @@ class FileStorage:
             all: return the object
             new: set new object and update
             save: convert objects to Json strings
-            reload: deserilize
+            reload: deserilize json string to instance
     Attributes:
             __file_path: the file that saves the object
-            __objects: dictionary of the objects
+            __objects: dictionary of the instanization of objects
             dict_data: dictionary of classes
     """
     __file_path = "file.json"
