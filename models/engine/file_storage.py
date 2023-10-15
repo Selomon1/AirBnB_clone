@@ -13,6 +13,10 @@ from models.place import Place
 from models.review import Review
 
 
+clses = {"BaseModel": BaseModel, "User": User, "State": State,
+         "City": City, "Amenity": Amenity, "Place": Place, "Review": Review}
+
+
 class FileStorage:
     """
     FileStorage class: a storage engine for AirBnB clone
@@ -28,8 +32,6 @@ class FileStorage:
     """
     __file_path = "file.json"
     __objects = {}
-    clses = {"BaseModel": BaseModel, "User": User, "Stata": State,
-             "City": City, "Amenity": Amenity, "Place": Place, "Review": Review}
 
     def all(self):
         """ return the object in dictionary """
