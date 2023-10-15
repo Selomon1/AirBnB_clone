@@ -18,7 +18,9 @@ import re
 
 
 def parse(line):
-    """ parses the command line arguments """
+    """
+    parses the command line arguments
+    """
     handl_curl = re.search(r"\{(.*?)\}", line)
     handl_brkt = re.search(r"\[(.*?)\]", line)
     if handl_curl is None:
