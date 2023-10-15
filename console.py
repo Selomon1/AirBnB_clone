@@ -30,6 +30,7 @@ class HBNBCommand(cmd.Cmd):
         """
         Signal to Exit the interpreter program
         """
+        print()
         return True
 
     def help_EOF(self):
@@ -44,17 +45,11 @@ class HBNBCommand(cmd.Cmd):
         """
         pass
 
-    def postloop(self):
-        """
-        Exits to be overridden by subclasses
-        """
-        print()
-
     def do_quit(self, line):
         """
         Exit the command interpreter program
         """
-        sys.exit()
+        return True
 
     def help_quit(self):
         """
