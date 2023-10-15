@@ -13,6 +13,7 @@ from models.review import Review
 from models.base_model import BaseModel
 import cmd
 import shlex
+import sys
 
 
 class HBNBCommand(cmd.Cmd):
@@ -53,7 +54,7 @@ class HBNBCommand(cmd.Cmd):
         """
         Exit the command interpreter program
         """
-        return True
+        sys.exit()
 
     def help_quit(self):
         """

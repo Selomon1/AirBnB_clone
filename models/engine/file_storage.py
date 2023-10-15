@@ -12,6 +12,9 @@ from models.amenity import Amenity
 from models.place import Place
 from models.review import Review
 
+clses = {"BaseModel": BaseModel, "User": User, "State": State,
+        "City": City, "Amenity":Amenity, "Place": Place, "Review": Review}
+
 
 class FileStorage:
     """
@@ -31,31 +34,29 @@ class FileStorage:
 
     def all(self):
         """ return the object in dictionary """
-        return FileStorage.__objects
+        return self.__objects
 
     def new(self, obj):
         """ Set new object in the dictionary of objects """
-        FileStorage.__objects["{}.{}".format(type(obj).__name__, obj.id)] = obj
+        self.__objects["{}.{}".format(type(obj).__name__, obj.id)] = obj
 
     def save(self):
         """ Convert objects to Json strings and save """
         dict_data = {}
 
-        for key, value in FileStorage.__objects.items():
+        for key, value in self.__objects.items():
             dict_data[key] = value.to_dict()
 
-        with open(FileStorage.__file_path, "w") as j:
+        with open(self.__file_path, "w") as j:
             json.dump(dict_data, j)
 
     def reload(self):
         """ Deserialize Json strings to objects """
         try:
-            with open(FileStorage.__file_path, 'r') as j:
-                deserilized_obj = json.load(j)
-                for key, obj in deserilized_obj.items():
-                    nameof_class = obj["__class__"]
-                    del obj["__class__"]
-                    FileStorage.__objects[key] = eval(nameof_class + "(**obj)")
+            with open(self.__file_path, 'r') as js:
+                dso = json.load(js)
+            for key in dso:
+                self.__objects[key] = clses[dso[key]["__class__"]](**dso[key])
 
         except FileNotFoundError:
             pass
