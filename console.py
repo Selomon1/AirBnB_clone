@@ -11,9 +11,29 @@ from models.amenity import Amenity
 from models.place import Place
 from models.review import Review
 from models.base_model import BaseModel
+from shlex import split
 import cmd
-import shlex
 import sys
+import re
+
+
+def parse(line):
+    """ parses the command line arguments """
+    handl_curl = re.search(r"\{(.*?)\}", line)
+    handl_brkt = re.search(r"\[(.*?)\]", line)
+    if handl_curl is None:
+        if handl_brkt is None:
+            return [i.strip(",") for i in split(line)]
+        else:
+            sp_line = split(line[:handl_brkt.span()[0]])
+            splted1 = [i.strip(",") for i in sp_line]
+            splted1.append(handl_brkt.group())
+            return splted1
+    else:
+        sp_line = split(line[:handl_curl.span()[0]])
+        splted1 = [i.strip(",") for i in sp_line]
+        splted1.append(handl_curl.group())
+        return splted1
 
 
 class HBNBCommand(cmd.Cmd):
@@ -24,7 +44,7 @@ class HBNBCommand(cmd.Cmd):
             mods (list): list of class names
     """
     prompt = "(hbnb) "
-    mods = ["BaseModel", "User", "State", "City", "Amenity", "Place", "Review"]
+    mods = {"BaseModel", "User", "State", "City", "Amenity", "Place", "Review"}
 
     def do_EOF(self, line):
         """
@@ -57,38 +77,66 @@ class HBNBCommand(cmd.Cmd):
         """
         print("Quit command to exit the program\n")
 
+    def default(self, line):
+        """ default response of cmd line """
+        dict_args = {
+            "all": self.do_all,
+            "show": self.do_show,
+            "destroy": self.do_destroy,
+            "count": self.do_count,
+            "update": self.do_update
+        }
+        comp = re.search(r"\.", line)
+        if comp is not None:
+            line1 = [line[:comp.span()[0]], line[comp.span()[1]:]]
+            comp = re.search(r"\((.*?)\)", line1[1])
+            if comp is not None:
+                comm = [line1[1][:comp.span()[0]], comp.group()[1:-1]]
+                if comm[0] in dict_args.keys():
+                    kl = "{} {}".format(line1[0], comm[1])
+                    return dict_args[comm[0]](kl)
+        print("*** Unknown syntax: {}".format(line))
+        return False
+
     def do_create(self, line):
         """ create an instance of BaseModel """
-        cmd_args = shlex.split(line)
+        cmd_args = parse(line)
         if len(cmd_args) == 0:
             print("** class name missing **")
         elif cmd_args[0] not in HBNBCommand.mods:
             print("** class doesn't exist **")
         else:
             new_insta = eval(str(cmd_args[0]) + '()')
-            new_insta.save()
             print(new_insta.id)
+            new_insta.save()
 
     def do_show(self, line):
         """ print the string representation of an instance """
-        cmd_args = shlex.split(line)
+        cmd_args = parse(line)
+        stor = storage.all()
         if len(cmd_args) == 0:
             print("** class name missing **")
         elif cmd_args[0] not in HBNBCommand.mods:
             print("** class doesn't exist **")
         elif len(cmd_args) == 1:
             print("** instance id missing **")
+        elif "{}.{}".format(cmd_args[0], cmd_args[1]) not in stor:
+            print("** no instance found **")
         else:
-            stor = storage.all()
-            inst1 = str(cmd_args[0]) + "." + str(cmd_args[1])
-            if inst1 in stor:
-                print(stor[inst1])
-            else:
-                print("** no instance found **")
+            print(stor["{}.{}".format(cmd_args[0], cmd_args[1])])
+
+    def do_count(self, line):
+        """ counts number of instances of class """
+        cmd_args = parse(line)
+        count = 0
+        for obj in storage.all().values():
+            if cmd_args[0] == obj.__class__.__name__:
+                count += 1
+        print(count)
 
     def do_destroy(self, line):
         """ deletes an instance based on the class name """
-        cmd_args = shlex.split(line)
+        cmd_args = parse(line)
         stor = storage.all()
         if len(cmd_args) == 0:
             print("** class name missing **")
@@ -106,7 +154,7 @@ class HBNBCommand(cmd.Cmd):
         """ prints a string representation of all instances based or not
         on the class name
         """
-        cmd_args = shlex.split(line)
+        cmd_args = parse(line)
         stor = storage.all()
         obj_op = []
         le = len(cmd_args)
@@ -122,30 +170,42 @@ class HBNBCommand(cmd.Cmd):
 
     def do_update(self, line):
         """ updates an instance based on the class name and id """
-        cmd_args = shlex.split(line)
+        cmd_args = parse(line)
         stor = storage.all()
         if len(cmd_args) == 0:
             print("** class name missing **")
+            return False
         elif cmd_args[0] not in HBNBCommand.mods:
             print("** class doesn't exist **")
+            return False
         elif len(cmd_args) == 1:
             print("** instance id missing **")
+            return False
         elif len(cmd_args) == 2:
             print("** attribute name missing **")
+            return False
         elif len(cmd_args) == 3:
-            print("** value missing **")
-        inst1 = cmd_args[0] + "." + cmd_args[1]
-        stor = storage.all()
-        try:
-            inst_obj = stor[inst1]
-        except KeyError:
-            print("** no instance found **")
-        try:
-            try_typ = type(getattr(inst_obj, cmd_args[2]))
-            cmd_args[3] = try_typ(cmd_args[3])
-        except AttributeError:
-            pass
-        setattr(inst_obj, cmd_args[2], cmd_args[3])
+            try:
+                type(eval(cmd_args[2])) != dict
+            except NameError:
+                print("** value missing **")
+                return False
+        elif len(cmd_args) == 4:
+            obj = stor["{}.{}".format(cmd_args[0], cmd_args[1])]
+            if cmd_args[2] in obj.__class__.__dict__.keys():
+                valtype = type(obj.__class__.__dict__[cmd_args[2]])
+                obj.__dict__[cmd_args[2]] = valtype(cmd_args[3])
+            else:
+                obj.__dict__[cmd_args[2]] = cmd_args[3]
+        elif type(eval(cmd_args[2])) == dict:
+            obj = stor["{}.{}".format(cmd_args[0], cmd_args[1])]
+            for k, v in eval(cmd_args[2]).items():
+                if (k in obj.__class__.__dict__.keys() and
+                        type(obj.__class__.__dict__[k]) in {str, int, float}):
+                    valtype = type(obj.__class__.__dict__[k])
+                    obj.__dict__[k] = valtype(v)
+                else:
+                    obj.__dict__[k] = v
         storage.save()
 
 
