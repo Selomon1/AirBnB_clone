@@ -2,6 +2,7 @@
 """
 User class inherited from BaseModel module
 """
+
 from models.base_model import BaseModel
 
 

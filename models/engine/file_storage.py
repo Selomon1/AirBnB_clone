@@ -30,8 +30,10 @@ class FileStorage:
             __objects: dictionary of the instanization of objects
             classes: dictionary of classes
     """
+
     __file_path = "file.json"
     __objects = {}
+
 
     def all(self):
         """ return the object in dictionary """
